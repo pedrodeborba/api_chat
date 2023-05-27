@@ -1,3 +1,4 @@
+const { Timestamp } = require("mongodb");
 const db = require("./db");
 
 let listarSalas = async ()=>{
@@ -26,4 +27,12 @@ let buscarMensagens = async (idsala, timestamp)=>{
 		}
 		return [];
 }
-module.exports = {listarSalas, buscarSala, atualizarMensagens, buscarMensagens};
+
+let criarSala = async (nome, tipo, chave)=>{
+    if(tipo == "privada"){
+        return await db.insertOne("salas", {"nome": nome, "tipo": tipo, "chave": chave});
+    }else{
+        return await db.insertOne("salas", {"nome": nome, "tipo": tipo});
+    }
+}
+module.exports = {listarSalas, buscarSala, atualizarMensagens, buscarMensagens, criarSala};

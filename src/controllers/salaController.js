@@ -16,6 +16,17 @@ exports.entrar= async (iduser,idsala)=>{
 	return false;
 }
 
+exports.criar = async (nome, tipo, chave)=>{
+    const resp = await salaModel.criarSala(nome, tipo, chave);
+    if(resp.insertedId){
+        return {
+            "_id" : resp.insertedId,
+            "nome": nome,
+            "tipo": tipo,
+        }
+    }
+}
+
 exports.enviarMensagem= async (nick, msg, idsala)=>{
 	const sala = await salaModel.buscarSala(idsala);
 		if(!sala.msgs){
@@ -43,7 +54,7 @@ exports.buscarMensagens = async (idsala, timestamp)=>{
 
 exports.sairSala= async (idsala, iduser)=>{
 	let user= await usuarioModel.buscarUsuario(iduser);
-	let resp= await this.enviarMensagem(user.nick, "Sai da sala!",idsala);
+	let resp = await this.enviarMensagem(user.nick, "Sai da sala!",idsala);
 	delete user.sala;
 	console.log(user);
 	if(await usuarioModel.alterarUsuario(user)){
